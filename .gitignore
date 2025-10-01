@@ -1,0 +1,29 @@
+# Archivos de compilación
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/Makefile
+/*.cmake
+/*.ninja
+/*.ninja_deps
+/*.ninja_log
+
+# Ejecutables y librerías
+*.o
+*.lo
+*.la
+*.a
+*.so
+*.dll
+*.dylib
+*.exe
+
+# Archivos de depuración
+*.gcda
+*.gcno
+*.gcov
+
+# Otros IDEs
+.vscode/
+.idea/
+*.user
