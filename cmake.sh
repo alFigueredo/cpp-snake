@@ -1,41 +1,37 @@
 #!/bin/bash
 
 BUILD_DIR='./build/'
-RELEASE_DIR=$BUILD_DIR'release/'
-DEBUG_DIR=$BUILD_DIR'debug/'
-EXEC_FILE=$RELEASE_DIR'snake'
+EXEC_FILE=$BUILD_DIR'snake'
 
 build() {
-	command cmake --build "$1"
+	command cmake --build $BUILD_DIR
 }
 
 cmake() {
-	command cmake -B $DEBUG_DIR -DCMAKE_BUILD_TYPE=debug
-	command cmake -B $RELEASE_DIR
+	command cmake -B $BUILD_DIR "$1"
 }
 
 main() {
 	case $1 in
 	cmake)
-		cmake
+		cmake ""
+		;;
+	cmake-debug)
+		cmake -DCMAKE_BUILD_TYPE=debug
 		;;
 	build)
-		build $RELEASE_DIR
+		build
 		;;
 	test)
-		build $RELEASE_DIR
-		command ctest --test-dir $RELEASE_DIR
+		build
+		command ctest --test-dir $BUILD_DIR
 		;;
 	run)
-		build $RELEASE_DIR
+		build
 		command $EXEC_FILE
 		;;
-	debug)
-		build $DEBUG_DIR
-		;;
 	clean)
-		command make -C $RELEASE_DIR clean
-		command make -C $DEBUG_DIR clean
+		command make -C $BUILD_DIR clean
 		;;
 	clean-all)
 		command rm -rf $BUILD_DIR
