@@ -6,10 +6,10 @@ This is an initial template for a C++ Project. The standard used is C++17
 
 There are some commands you can use with _./cmake.sh_, for example: _./cmake.sh build_. You can also combine them like _./cmake.sh cmake build test_. You may need to give permissions to the _cmake.sh_ file to run, you can do that by _chmod +x cmake.sh_.
 
-- **cmake:** build makefiles
+- **cmake:** build makefiles for release.
+- **cmake-debug:** build makefiles for debug.
 - **build:** build executable using the makefiles previously generated with cmake.
 - **test:** build and run ctest on release executable.
-- **run:** build and run release executable.
-- **debug:** build executable in debug directory for debugging.
+- **run:** build and run executable.
 - **clean:** clean executables.
 - **clean-all:** clean executables and makefiles.
