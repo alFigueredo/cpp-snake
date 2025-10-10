@@ -1,4 +1,6 @@
 -I
 ./include/
 -I
-./build/release/_deps/sfml-src/include/
+./build/_deps/sfml-src/include/
+-I
+./build/_deps/gtest-src/googletest/include/

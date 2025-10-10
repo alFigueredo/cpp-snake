@@ -7,17 +7,13 @@ build() {
 	command cmake --build $BUILD_DIR
 }
 
-cmake() {
-	command cmake -B $BUILD_DIR "$1"
-}
-
 main() {
 	case $1 in
 	cmake)
-		cmake ""
+		command cmake -B $BUILD_DIR
 		;;
 	cmake-debug)
-		cmake -DCMAKE_BUILD_TYPE=debug
+		command cmake -B $BUILD_DIR -DCMAKE_BUILD_TYPE=debug
 		;;
 	build)
 		build
