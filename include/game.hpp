@@ -1,6 +1,8 @@
 #pragma once
 
 #include "events.hpp"
+#include "food.hpp"
+#include "snake.hpp"
 #include "window.hpp"
 #include <SFML/Window/Keyboard.hpp>
 
@@ -17,6 +19,8 @@ private:
   bool lose;
   bool paused;
   const std::unique_ptr<Window> window;
+  const std::unique_ptr<Snake> snake;
+  const std::unique_ptr<Food> food;
   Game(const std::string &title_);
 
 public:
@@ -36,6 +40,8 @@ public:
   bool isPaused() const;
   bool isRunning() const;
   Window &getWindow() const;
+  Snake &getSnake() const;
+  Food &getFood() const;
 
   void setScore(const unsigned &score);
   void setMoving(const sf::Keyboard::Scancode &moving);
@@ -47,6 +53,7 @@ public:
 
   void reset();
   void run();
+  void moveSnake(sf::Vector2i &&vector);
   void move();
   void lost();
   void pause();

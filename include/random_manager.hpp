@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics/Font.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <random>
 
 class RandomManager {

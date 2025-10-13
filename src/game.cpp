@@ -1,7 +1,9 @@
 #include "game.hpp"
 
 Game::Game(const std::string &title_)
-    : title(title_), window(std::make_unique<Window>(title)) {
+    : title(title_), window(std::make_unique<Window>(title_)),
+      snake(std::make_unique<Snake>()),
+      food(std::make_unique<Food>(getWindow().getSizef())) {
   reset();
 }
 
@@ -21,6 +23,8 @@ bool Game::isLose() const { return lose; }
 bool Game::isPaused() const { return paused; }
 bool Game::isRunning() const { return !isLose() && !isPaused(); }
 Window &Game::getWindow() const { return *window; }
+Snake &Game::getSnake() const { return *snake; }
+Food &Game::getFood() const { return *food; }
 
 void Game::setScore(const unsigned &score) { this->score = score; }
 void Game::setMoving(const sf::Keyboard::Scancode &moving) {
@@ -42,24 +46,56 @@ void Game::reset() {
   setTimeGap(baseTime);
   setLose(false);
   setPaused(false);
+  getSnake().reset(getWindow());
+  do
+    getFood().reset(getWindow().getRandomVector2());
+  while (getSnake().collision(getFood().getPosition()));
   getWindow().reset(score);
 }
 
-void Game::run() { Events::handleEvents(*this); }
+void Game::run() {
+  while (isOpen()) {
+    Events::handleEvents(*this);
+    if (isRunning())
+      move();
+    drawShapes();
+    sf::sleep(sf::milliseconds(
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::X) ? getBaseLimit()
+                                                              : getTimeGap()));
+  }
+}
+
+void Game::moveSnake(sf::Vector2i &&vector) {
+  getWindow().adaptMove(vector, getSnake().getPosition());
+  if (getSnake().self_collision(vector)) {
+    lost();
+    return;
+  }
+  getSnake().move(getWindow(), vector);
+  if (getSnake().getPosition() == getFood().getPosition()) {
+    setScore(getScore() + 10);
+    reduceTimeGap();
+    do
+      getFood().reset(getWindow().getRandomVector2());
+    while (getSnake().collision(getFood().getPosition()));
+  } else
+    getSnake().moveTail();
+  getWindow().setTextString("Score: " + std::to_string(getScore()));
+};
 
 void Game::move() {
   switch (getMoving()) {
   case sf::Keyboard::Scancode::W:
-    getWindow().moveSnake(*this, sf::Vector2i(0, -1));
+    moveSnake(sf::Vector2i(0, -1));
     break;
   case sf::Keyboard::Scancode::S:
-    getWindow().moveSnake(*this, sf::Vector2i(0, 1));
+    moveSnake(sf::Vector2i(0, 1));
     break;
   case sf::Keyboard::Scancode::A:
-    getWindow().moveSnake(*this, sf::Vector2i(-1, 0));
+    moveSnake(sf::Vector2i(-1, 0));
     break;
   case sf::Keyboard::Scancode::D:
-    getWindow().moveSnake(*this, sf::Vector2i(1, 0));
+    moveSnake(sf::Vector2i(1, 0));
     break;
   default:
     break;
@@ -69,6 +105,7 @@ void Game::move() {
 
 void Game::lost() {
   setLose(true);
+  getSnake().fillColor(sf::Color::Red);
   getWindow().lose(getScore());
 }
 
@@ -83,4 +120,4 @@ void Game::close() { getWindow().close(); }
 
 bool Game::isOpen() const { return getWindow().isOpen(); }
 
-void Game::drawShapes() { getWindow().drawShapes(); }
+void Game::drawShapes() { getWindow().drawShapes(*this); }

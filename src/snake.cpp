@@ -1,6 +1,5 @@
 #include "snake.hpp"
 #include "window.hpp"
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <algorithm>
 
 Snake::Snake() {}

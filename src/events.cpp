@@ -1,8 +1,8 @@
 #include "events.hpp"
 #include "game.hpp"
 
-bool checkMovingKeys(const sf::Keyboard::Scancode &lastKey,
-                     const sf::Keyboard::Scancode &currentKey) {
+bool Events::checkMovingKeys(const sf::Keyboard::Scancode &lastKey,
+                             const sf::Keyboard::Scancode &currentKey) {
   switch (currentKey) {
   case sf::Keyboard::Scancode::A:
   case sf::Keyboard::Scancode::D:
@@ -15,7 +15,6 @@ bool checkMovingKeys(const sf::Keyboard::Scancode &lastKey,
   default:
     return false;
   }
-  return false;
 }
 
 void Events::handleEvents(Game &game) {
@@ -33,14 +32,9 @@ void Events::handleEvents(Game &game) {
         switch (currentKey) {
         case sf::Keyboard::Scancode::A:
         case sf::Keyboard::Scancode::D:
-          if (lastKey != sf::Keyboard::Scancode::A &&
-              lastKey != sf::Keyboard::Scancode::D)
-            game.setMoving(currentKey);
-          break;
         case sf::Keyboard::Scancode::W:
         case sf::Keyboard::Scancode::S:
-          if (lastKey != sf::Keyboard::Scancode::W &&
-              lastKey != sf::Keyboard::Scancode::S)
+          if (checkMovingKeys(lastKey, currentKey))
             game.setMoving(currentKey);
           break;
         case sf::Keyboard::Scancode::R:
@@ -56,15 +50,6 @@ void Events::handleEvents(Game &game) {
           break;
         }
       };
-  while (game.isOpen()) {
-    game.getWindow().getWindow().handleEvents(
-        eventClosed, eventFocusLost, eventFocusGained, eventKeyPressed);
-    if (game.isRunning())
-      game.move();
-    game.drawShapes();
-    sf::sleep(
-        sf::milliseconds(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::X)
-                             ? game.getBaseLimit()
-                             : game.getTimeGap()));
-  }
+  game.getWindow().getWindow().handleEvents(eventClosed, eventFocusLost,
+                                            eventFocusGained, eventKeyPressed);
 }
