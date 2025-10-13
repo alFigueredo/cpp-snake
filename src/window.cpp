@@ -79,9 +79,9 @@ bool Window::isOpen() const { return window.isOpen(); }
 
 void Window::drawShapes() {
   getWindow().clear();
-  getWindow().draw(*text);
   getSnake().draw(*this);
   getFood().draw(*this);
+  getWindow().draw(*text);
   getWindow().display();
 }
 

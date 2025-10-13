@@ -1,6 +1,5 @@
 #include "events.hpp"
 #include "game.hpp"
-#include <iostream>
 
 void Events::handleEvents(Game &game) {
   const auto eventClosed = [&game](const sf::Event::Closed &) { game.close(); };
