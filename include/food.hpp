@@ -4,6 +4,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Vector2.hpp>
 
+class Window;
+
 class Food {
 private:
   sf::RectangleShape food;
@@ -14,4 +16,6 @@ public:
   void reset(const sf::Vector2f &position);
 
   sf::Vector2f getPosition() const;
+
+  void draw(Window &window) const;
 };

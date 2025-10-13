@@ -1,4 +1,5 @@
 #include "food.hpp"
+#include "window.hpp"
 
 Food::Food(const float &size) : food(sf::RectangleShape({size, size})) {
   food.setFillColor(sf::Color::Blue);
@@ -7,3 +8,5 @@ Food::Food(const float &size) : food(sf::RectangleShape({size, size})) {
 void Food::reset(const sf::Vector2f &position) { food.setPosition(position); }
 
 sf::Vector2f Food::getPosition() const { return food.getPosition(); }
+
+void Food::draw(Window &window) const { window.getWindow().draw(food); }

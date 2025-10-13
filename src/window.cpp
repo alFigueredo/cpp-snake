@@ -1,5 +1,6 @@
 #include "window.hpp"
 #include "font.hpp"
+#include "game.hpp"
 
 Window::Window(const std::string &title_)
     : title(title_),
@@ -29,32 +30,45 @@ void Window::setTextString(const std::string &string) {
 
 void Window::reset(const unsigned &score) {
 
-  snake->reset(*this);
+  getSnake().reset(*this);
   do
-    food->reset(randomManager->getVector2f(getSize()));
+    getFood().reset(randomManager->getVector2f(getSize()));
   while (snake->collision(food->getPosition()));
   setTextString("Score: " + std::to_string(score));
 }
 
-sf::Vector2f Window::getVector2f(const sf::Vector2f &vector) {
+sf::Vector2f Window::getVector2f(const sf::Vector2f &vector) const {
   const sf::Vector2f newVector(vector * getSizef() + getSnake().getPosition());
-  const float x = newVector.x < 0              ? getWidthP()
+  const float x = newVector.x < 0              ? getWidthP() - getSize()
                   : newVector.x >= getWidthP() ? 0
                                                : newVector.x;
-  const float y = newVector.y < 0               ? getHeightP()
+  const float y = newVector.y < 0               ? getHeightP() - getSize()
                   : newVector.y >= getHeightP() ? 0
                                                 : newVector.y;
   return sf::Vector2f(x, y);
 }
 
-void Window::moveSnake(const sf::Vector2f &vector) {
-  const sf::Vector2f newVector(vector);
+void Window::moveSnake(Game &game, const sf::Vector2f &vector) {
+  const sf::Vector2f newVector = getVector2f(vector);
+  if (getSnake().self_collision(newVector)) {
+    game.lost();
+    return;
+  }
   getSnake().move(*this, newVector);
+  if (getSnake().getPosition() == getFood().getPosition()) {
+    game.setScore(game.getScore() + 10);
+    game.reduceTimeGap();
+    do
+      getFood().reset(randomManager->getVector2f(getSize()));
+    while (getSnake().collision(getFood().getPosition()));
+  } else
+    getSnake().moveTail();
+  setTextString("Score: " + std::to_string(game.getScore()));
 };
 
 void Window::lose(const unsigned &score) {
-  snake->fillColor(sf::Color::Red);
-  setTextString("Final score: " + std::to_string(score));
+  getSnake().fillColor(sf::Color::Red);
+  setTextString("Final: " + std::to_string(score));
 }
 
 void Window::pause() { setTextString("Paused"); }
@@ -63,10 +77,18 @@ void Window::close() { window.close(); }
 
 bool Window::isOpen() const { return window.isOpen(); }
 
+void Window::drawShapes() {
+  getWindow().clear();
+  getWindow().draw(*text);
+  getSnake().draw(*this);
+  getFood().draw(*this);
+  getWindow().display();
+}
+
 sf::RectangleShape Window::new_shape(const sf::Vector2f &pos,
                                      const sf::Color &color) const {
   sf::RectangleShape shape(sf::Vector2f(getSizef(), getSizef()));
   shape.setFillColor(color);
-  shape.setPosition(pos * getSizef());
+  shape.setPosition(pos);
   return shape;
 }

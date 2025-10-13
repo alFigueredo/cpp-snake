@@ -9,6 +9,7 @@ private:
   const std::string title;
   unsigned int score;
   sf::Keyboard::Scancode moving;
+  sf::Keyboard::Scancode lastMoving;
   const unsigned int baseTime = 1024;
   const unsigned int baseGap = 16;
   const unsigned int baseLimit = 48;
@@ -26,22 +27,31 @@ public:
 
   unsigned getScore() const;
   sf::Keyboard::Scancode getMoving() const;
+  sf::Keyboard::Scancode getLastMoving() const;
   unsigned getBaseTime() const;
-  bool getLose() const;
-  bool getPaused() const;
+  unsigned getBaseLimit() const;
+  unsigned getBaseGap() const;
+  unsigned getTimeGap() const;
+  bool isLose() const;
+  bool isPaused() const;
+  bool isRunning() const;
   Window &getWindow() const;
 
   void setScore(const unsigned &score);
   void setMoving(const sf::Keyboard::Scancode &moving);
+  void setLastMoving();
   void setTimeGap(const unsigned &timeGap);
   void setLose(const bool &lose);
   void setPaused(const bool &paused);
+  void reduceTimeGap();
 
   void reset();
   void run();
   void move();
   void lost();
   void pause();
+  void resume();
   void close();
   bool isOpen() const;
+  void drawShapes();
 };

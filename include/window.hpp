@@ -9,6 +9,8 @@
 #include <SFML/System/Vector2.hpp>
 #include <memory>
 
+class Game;
+
 class Window {
 private:
   const std::string title;
@@ -38,11 +40,12 @@ public:
   void setTextString(const std::string &text);
 
   void reset(const unsigned &score);
-  sf::Vector2f getVector2f(const sf::Vector2f &vector);
-  void moveSnake(const sf::Vector2f &vector);
+  sf::Vector2f getVector2f(const sf::Vector2f &vector) const;
+  void moveSnake(Game &game, const sf::Vector2f &vector);
   void lose(const unsigned &score);
   void pause();
   void close();
+  void drawShapes();
   bool isOpen() const;
   sf::RectangleShape new_shape(const sf::Vector2f &pos,
                                const sf::Color &color = sf::Color::Green) const;
