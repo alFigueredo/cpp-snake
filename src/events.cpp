@@ -50,6 +50,6 @@ void Events::handleEvents(Game &game) {
           break;
         }
       };
-  game.getWindow().getWindow().handleEvents(eventClosed, eventFocusLost,
-                                            eventFocusGained, eventKeyPressed);
+  game.getWindow().handleEvents(eventClosed, eventFocusLost, eventFocusGained,
+                                eventKeyPressed);
 }

@@ -7,6 +7,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <memory>
+#include <utility>
 
 class Game;
 
@@ -39,6 +40,10 @@ public:
   void lose(const unsigned &score);
   void pause();
   void close();
+
+  template <typename... Handlers> void handleEvents(Handlers &&...handlers) {
+    window.handleEvents(std::forward<Handlers>(handlers)...);
+  }
   bool isOpen() const;
   sf::Vector2i getRandomVector2();
   void drawShapes(const Game &game);
