@@ -38,24 +38,23 @@ void Window::reset(const unsigned &score) {
   setTextString("Score: " + std::to_string(score));
 }
 
-sf::Vector2i Window::getVector2(const sf::Vector2i &vector) const {
+void Window::adaptVector2(sf::Vector2i &vector) const {
   const sf::Vector2i newVector(vector * getSize() + getSnake().getPosition());
-  const float x = newVector.x < 0              ? getWidthP() - getSize()
-                  : newVector.x >= getWidthP() ? 0
-                                               : newVector.x;
-  const float y = newVector.y < 0               ? getHeightP() - getSize()
-                  : newVector.y >= getHeightP() ? 0
-                                                : newVector.y;
-  return sf::Vector2i(x, y);
+  vector.x = newVector.x < 0              ? getWidthP() - getSize()
+             : newVector.x >= getWidthP() ? 0
+                                          : newVector.x;
+  vector.y = newVector.y < 0               ? getHeightP() - getSize()
+             : newVector.y >= getHeightP() ? 0
+                                           : newVector.y;
 }
 
-void Window::moveSnake(Game &game, const sf::Vector2i &vector) {
-  const sf::Vector2i newVector = getVector2(vector);
-  if (getSnake().self_collision(newVector)) {
+void Window::moveSnake(Game &game, sf::Vector2i &&vector) {
+  adaptVector2(vector);
+  if (getSnake().self_collision(vector)) {
     game.lost();
     return;
   }
-  getSnake().move(*this, newVector);
+  getSnake().move(*this, vector);
   if (getSnake().getPosition() == getFood().getPosition()) {
     game.setScore(game.getScore() + 10);
     game.reduceTimeGap();

@@ -40,8 +40,8 @@ public:
   void setTextString(const std::string &text);
   void drawShape(const sf::Drawable &shape);
   void reset(const unsigned &score);
-  sf::Vector2i getVector2(const sf::Vector2i &vector) const;
-  void moveSnake(Game &game, const sf::Vector2i &vector);
+  void adaptVector2(sf::Vector2i &vector) const;
+  void moveSnake(Game &game, sf::Vector2i &&vector);
   void lose(const unsigned &score);
   void pause();
   void close();
