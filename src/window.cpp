@@ -7,17 +7,17 @@ Window::Window(const std::string &title_)
       window(sf::RenderWindow(sf::VideoMode({widthP, heightP}), title_)),
       snake(std::make_unique<Snake>()),
       food(std::make_unique<Food>(getSizef())),
-      font(Font::getFont("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")),
+      font(Font::getFont("./assets/fonts/DejaVuSans.ttf")),
       randomManager(std::make_unique<RandomManager>(getWidth(), getHeight())) {
   text = std::make_unique<sf::Text>(font, "", 24);
   text->setFillColor(sf::Color::White);
   text->setPosition(sf::Vector2f(widthP - 160, 0));
 }
 
-unsigned Window::getSize() const { return size; }
+int Window::getSize() const { return size; }
 float Window::getSizef() const { return size; }
-unsigned Window::getWidthP() const { return widthP; }
-unsigned Window::getHeightP() const { return heightP; }
+int Window::getWidthP() const { return widthP; }
+int Window::getHeightP() const { return heightP; }
 unsigned Window::getWidth() const { return getWidthP() / size; }
 unsigned Window::getHeight() const { return getHeightP() / size; }
 Snake &Window::getSnake() const { return *snake; }
@@ -28,28 +28,29 @@ void Window::setTextString(const std::string &string) {
   text->setString(string);
 }
 
-void Window::reset(const unsigned &score) {
+void Window::drawShape(const sf::Drawable &shape) { getWindow().draw(shape); }
 
+void Window::reset(const unsigned &score) {
   getSnake().reset(*this);
   do
-    getFood().reset(randomManager->getVector2f(getSize()));
-  while (snake->collision(food->getPosition()));
+    getFood().reset(randomManager->getVector2() * getSize());
+  while (getSnake().collision(getFood().getPosition()));
   setTextString("Score: " + std::to_string(score));
 }
 
-sf::Vector2f Window::getVector2f(const sf::Vector2f &vector) const {
-  const sf::Vector2f newVector(vector * getSizef() + getSnake().getPosition());
+sf::Vector2i Window::getVector2(const sf::Vector2i &vector) const {
+  const sf::Vector2i newVector(vector * getSize() + getSnake().getPosition());
   const float x = newVector.x < 0              ? getWidthP() - getSize()
                   : newVector.x >= getWidthP() ? 0
                                                : newVector.x;
   const float y = newVector.y < 0               ? getHeightP() - getSize()
                   : newVector.y >= getHeightP() ? 0
                                                 : newVector.y;
-  return sf::Vector2f(x, y);
+  return sf::Vector2i(x, y);
 }
 
-void Window::moveSnake(Game &game, const sf::Vector2f &vector) {
-  const sf::Vector2f newVector = getVector2f(vector);
+void Window::moveSnake(Game &game, const sf::Vector2i &vector) {
+  const sf::Vector2i newVector = getVector2(vector);
   if (getSnake().self_collision(newVector)) {
     game.lost();
     return;
@@ -59,7 +60,7 @@ void Window::moveSnake(Game &game, const sf::Vector2f &vector) {
     game.setScore(game.getScore() + 10);
     game.reduceTimeGap();
     do
-      getFood().reset(randomManager->getVector2f(getSize()));
+      getFood().reset(randomManager->getVector2() * getSize());
     while (getSnake().collision(getFood().getPosition()));
   } else
     getSnake().moveTail();
@@ -81,14 +82,14 @@ void Window::drawShapes() {
   getWindow().clear();
   getSnake().draw(*this);
   getFood().draw(*this);
-  getWindow().draw(*text);
+  drawShape(*text);
   getWindow().display();
 }
 
-sf::RectangleShape Window::new_shape(const sf::Vector2f &pos,
+sf::RectangleShape Window::new_shape(const sf::Vector2i &position,
                                      const sf::Color &color) const {
-  sf::RectangleShape shape(sf::Vector2f(getSizef(), getSizef()));
+  sf::RectangleShape shape(sf::Vector2f(getSize(), getSize()));
   shape.setFillColor(color);
-  shape.setPosition(pos);
+  shape.setPosition(sf::Vector2f(position));
   return shape;
 }

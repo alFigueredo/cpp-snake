@@ -5,8 +5,12 @@ Food::Food(const float &size) : food(sf::RectangleShape({size, size})) {
   food.setFillColor(sf::Color::Blue);
 }
 
-void Food::reset(const sf::Vector2f &position) { food.setPosition(position); }
+void Food::reset(const sf::Vector2i &position) {
+  food.setPosition(sf::Vector2f(position));
+}
 
-sf::Vector2f Food::getPosition() const { return food.getPosition(); }
+sf::Vector2i Food::getPosition() const {
+  return sf::Vector2i(food.getPosition());
+}
 
-void Food::draw(Window &window) const { window.getWindow().draw(food); }
+void Food::draw(Window &window) const { window.drawShape(food); }

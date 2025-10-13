@@ -27,10 +27,10 @@ private:
 public:
   Window(const std::string &title_);
 
-  unsigned getSize() const;
+  int getSize() const;
   float getSizef() const;
-  unsigned getWidthP() const;
-  unsigned getHeightP() const;
+  int getWidthP() const;
+  int getHeightP() const;
   unsigned getWidth() const;
   unsigned getHeight() const;
   Snake &getSnake() const;
@@ -38,15 +38,15 @@ public:
   sf::RenderWindow &getWindow();
 
   void setTextString(const std::string &text);
-
+  void drawShape(const sf::Drawable &shape);
   void reset(const unsigned &score);
-  sf::Vector2f getVector2f(const sf::Vector2f &vector) const;
-  void moveSnake(Game &game, const sf::Vector2f &vector);
+  sf::Vector2i getVector2(const sf::Vector2i &vector) const;
+  void moveSnake(Game &game, const sf::Vector2i &vector);
   void lose(const unsigned &score);
   void pause();
   void close();
   void drawShapes();
   bool isOpen() const;
-  sf::RectangleShape new_shape(const sf::Vector2f &pos,
+  sf::RectangleShape new_shape(const sf::Vector2i &pos,
                                const sf::Color &color = sf::Color::Green) const;
 };

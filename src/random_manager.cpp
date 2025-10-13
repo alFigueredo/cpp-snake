@@ -11,6 +11,6 @@ int RandomManager::getWidth() { return randWidth(gen); }
 
 int RandomManager::getHeight() { return randHeight(gen); }
 
-sf::Vector2f RandomManager::getVector2f(const unsigned &size) {
-  return sf::Vector2f(getWidth() * size, getHeight() * size);
+sf::Vector2i RandomManager::getVector2() {
+  return sf::Vector2i(getWidth(), getHeight());
 }

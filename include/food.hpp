@@ -13,9 +13,9 @@ private:
 public:
   Food(const float &size);
 
-  void reset(const sf::Vector2f &position);
+  void reset(const sf::Vector2i &position);
 
-  sf::Vector2f getPosition() const;
+  sf::Vector2i getPosition() const;
 
   void draw(Window &window) const;
 };

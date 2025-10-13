@@ -50,16 +50,16 @@ void Game::run() { Events::handleEvents(*this); }
 void Game::move() {
   switch (getMoving()) {
   case sf::Keyboard::Scancode::W:
-    getWindow().moveSnake(*this, sf::Vector2f(0, -1));
+    getWindow().moveSnake(*this, sf::Vector2i(0, -1));
     break;
   case sf::Keyboard::Scancode::S:
-    getWindow().moveSnake(*this, sf::Vector2f(0, 1));
+    getWindow().moveSnake(*this, sf::Vector2i(0, 1));
     break;
   case sf::Keyboard::Scancode::A:
-    getWindow().moveSnake(*this, sf::Vector2f(-1, 0));
+    getWindow().moveSnake(*this, sf::Vector2i(-1, 0));
     break;
   case sf::Keyboard::Scancode::D:
-    getWindow().moveSnake(*this, sf::Vector2f(1, 0));
+    getWindow().moveSnake(*this, sf::Vector2i(1, 0));
     break;
   default:
     break;
@@ -79,7 +79,7 @@ void Game::pause() {
 
 void Game::resume() { setPaused(false); }
 
-void Game::close() { window->close(); }
+void Game::close() { getWindow().close(); }
 
 bool Game::isOpen() const { return getWindow().isOpen(); }
 

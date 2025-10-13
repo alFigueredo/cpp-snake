@@ -14,10 +14,10 @@ public:
   Snake();
   void reset(const Window &window);
   void fillColor(const sf::Color &color);
-  bool collision(const sf::Vector2f &position);
-  bool self_collision(sf::Vector2f move);
-  void move(const Window &window, const sf::Vector2f &move);
+  bool collision(const sf::Vector2i &position);
+  bool self_collision(sf::Vector2i move);
+  void move(const Window &window, const sf::Vector2i &move);
   void moveTail();
-  sf::Vector2f getPosition();
+  sf::Vector2i getPosition();
   void draw(Window &window);
 };

@@ -1,6 +1,23 @@
 #include "events.hpp"
 #include "game.hpp"
 
+bool checkMovingKeys(const sf::Keyboard::Scancode &lastKey,
+                     const sf::Keyboard::Scancode &currentKey) {
+  switch (currentKey) {
+  case sf::Keyboard::Scancode::A:
+  case sf::Keyboard::Scancode::D:
+    return lastKey != sf::Keyboard::Scancode::A &&
+           lastKey != sf::Keyboard::Scancode::D;
+  case sf::Keyboard::Scancode::W:
+  case sf::Keyboard::Scancode::S:
+    return lastKey != sf::Keyboard::Scancode::W &&
+           lastKey != sf::Keyboard::Scancode::S;
+  default:
+    return false;
+  }
+  return false;
+}
+
 void Events::handleEvents(Game &game) {
   const auto eventClosed = [&game](const sf::Event::Closed &) { game.close(); };
   const auto eventFocusLost = [&game](const sf::Event::FocusLost &) {
@@ -12,23 +29,31 @@ void Events::handleEvents(Game &game) {
   const auto eventKeyPressed =
       [&game](const sf::Event::KeyPressed &keyPressed) {
         const sf::Keyboard::Scancode lastKey = game.getLastMoving();
-        const sf::Keyboard::Scancode actualKey = keyPressed.scancode;
-        if (((actualKey == sf::Keyboard::Scancode::A ||
-              actualKey == sf::Keyboard::Scancode::D) &&
-             (lastKey != sf::Keyboard::Scancode::A &&
-              lastKey != sf::Keyboard::Scancode::D)) ||
-            ((actualKey == sf::Keyboard::Scancode::W ||
-              actualKey == sf::Keyboard::Scancode::S) &&
-             (lastKey != sf::Keyboard::Scancode::W &&
-              lastKey != sf::Keyboard::Scancode::S)))
-          game.setMoving(keyPressed.scancode);
-        else if (actualKey == sf::Keyboard::Scancode::R)
+        const sf::Keyboard::Scancode currentKey = keyPressed.scancode;
+        switch (currentKey) {
+        case sf::Keyboard::Scancode::A:
+        case sf::Keyboard::Scancode::D:
+          if (lastKey != sf::Keyboard::Scancode::A &&
+              lastKey != sf::Keyboard::Scancode::D)
+            game.setMoving(currentKey);
+          break;
+        case sf::Keyboard::Scancode::W:
+        case sf::Keyboard::Scancode::S:
+          if (lastKey != sf::Keyboard::Scancode::W &&
+              lastKey != sf::Keyboard::Scancode::S)
+            game.setMoving(currentKey);
+          break;
+        case sf::Keyboard::Scancode::R:
           game.reset();
-        else if (actualKey == sf::Keyboard::Scancode::P) {
+          break;
+        case sf::Keyboard::Scancode::P:
           if (game.isPaused())
             game.resume();
           else
             game.pause();
+          break;
+        default:
+          break;
         }
       };
   while (game.isOpen()) {

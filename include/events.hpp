@@ -8,5 +8,7 @@ class Game;
 
 class Events {
 public:
+  static bool checkMovingKeys(const sf::Keyboard::Scancode &lastKey,
+                              const sf::Keyboard::Scancode &currentKey);
   static void handleEvents(Game &game);
 };

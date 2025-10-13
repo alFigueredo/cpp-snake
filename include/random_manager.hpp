@@ -13,5 +13,5 @@ public:
   RandomManager(const unsigned &width, const unsigned &height);
   int getWidth();
   int getHeight();
-  sf::Vector2f getVector2f(const unsigned &size);
+  sf::Vector2i getVector2();
 };
