@@ -60,5 +60,6 @@ public:
   void resume();
   void close();
   bool isOpen() const;
+  void displayShapes();
   void drawShapes();
 };

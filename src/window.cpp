@@ -55,10 +55,9 @@ sf::Vector2i Window::getRandomVector2() {
   return getRandomManager().getVector2() * getSize();
 }
 
-void Window::drawShapes(const Game &game) {
+void Window::displayShapes(Game &game) {
   getWindow().clear();
-  game.getSnake().draw(*this);
-  game.getFood().draw(*this);
+  game.drawShapes();
   drawShape(*text);
   getWindow().display();
 }

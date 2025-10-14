@@ -46,7 +46,7 @@ public:
   }
   bool isOpen() const;
   sf::Vector2i getRandomVector2();
-  void drawShapes(const Game &game);
+  void displayShapes(Game &game);
   sf::RectangleShape new_shape(const sf::Vector2i &pos,
                                const sf::Color &color = sf::Color::Green) const;
 };

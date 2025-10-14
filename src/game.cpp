@@ -58,7 +58,7 @@ void Game::run() {
     Events::handleEvents(*this);
     if (isRunning())
       move();
-    drawShapes();
+    displayShapes();
     sf::sleep(sf::milliseconds(
         sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::X) ? getBaseLimit()
                                                               : getTimeGap()));
@@ -120,4 +120,9 @@ void Game::close() { getWindow().close(); }
 
 bool Game::isOpen() const { return getWindow().isOpen(); }
 
-void Game::drawShapes() { getWindow().drawShapes(*this); }
+void Game::displayShapes() { getWindow().displayShapes(*this); }
+
+void Game::drawShapes() {
+  getSnake().draw(getWindow());
+  getFood().draw(getWindow());
+}
