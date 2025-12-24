@@ -11,8 +11,6 @@ add_library(${CMAKE_PROJECT_NAME}_lib STATIC ${MY_SOURCES})
 target_include_directories(${CMAKE_PROJECT_NAME}_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_options(${CMAKE_PROJECT_NAME}_lib PRIVATE -Wall -Wextra -Wpedantic)
 
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs" FORCE)
-
 FetchContent_Declare(
 	GTest
     GIT_REPOSITORY https://github.com/google/googletest.git
@@ -21,6 +19,8 @@ FetchContent_Declare(
     EXCLUDE_FROM_ALL
 )
 FetchContent_MakeAvailable(GTest)
+
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs" FORCE)
 
 FetchContent_Declare(
     SFML
