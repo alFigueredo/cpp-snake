@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.28)
 
-project(snake VERSION 1.0)
-
-set(CMAKE_CXX_STANDARD 17)
+project(snake VERSION 1.0 LANGUAGES CXX)
 
 include(FetchContent)
 
@@ -13,6 +11,8 @@ add_library(${CMAKE_PROJECT_NAME}_lib STATIC ${MY_SOURCES})
 target_include_directories(${CMAKE_PROJECT_NAME}_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_options(${CMAKE_PROJECT_NAME}_lib PRIVATE -Wall -Wextra -Wpedantic)
 
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs" FORCE)
+
 FetchContent_Declare(
 	GTest
     GIT_REPOSITORY https://github.com/google/googletest.git
@@ -21,12 +21,6 @@ FetchContent_Declare(
     EXCLUDE_FROM_ALL
 )
 FetchContent_MakeAvailable(GTest)
-target_include_directories(${CMAKE_PROJECT_NAME}_lib BEFORE PUBLIC "${GTest_DIR}/include")
-
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs" FORCE)
-set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(SFML_BUILD_DOC OFF CACHE BOOL "" FORCE)
-set(SFML_BUILD_TEST_SUITE OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
     SFML
@@ -37,11 +31,12 @@ FetchContent_Declare(
     SYSTEM                     # suprime warnings de SFML
 )
 FetchContent_MakeAvailable(SFML)
-target_include_directories(${CMAKE_PROJECT_NAME}_lib BEFORE PUBLIC "${SFML_SOURCE_DIR}/include")
 
 add_executable(${CMAKE_PROJECT_NAME} src/main.cpp)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_PROJECT_NAME}_lib
+target_link_libraries(${CMAKE_PROJECT_NAME}_lib PUBLIC
 	SFML::Graphics SFML::Window SFML::System)
+target_compile_features(${CMAKE_PROJECT_NAME}_lib PUBLIC cxx_std_17)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_PROJECT_NAME}_lib)
 
 enable_testing()
 add_subdirectory(tests)
